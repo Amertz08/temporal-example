@@ -19,7 +19,8 @@ type CaseRepository interface {
 func main() {
 	e := echo.New()
 
-	repo := NewInMemoryDB()
+	var repo CaseRepository
+	repo = NewInMemoryDB()
 
 	e.POST("/case", func(c *echo.Context) error {
 		// read the request body into the new Case
