@@ -7,6 +7,7 @@ type Case struct {
 	Address   string `json:"address"`
 	Email     string `json:"email"`
 	VinNumber string `json:"vin_number"`
+	Approved  bool   `json:"approved"`
 }
 
 // TODO: JSON file implementation for persistent storage

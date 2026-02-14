@@ -1,0 +1,6 @@
+PUT localhost:8080/case/abc-def
+Content-Type: application/json
+
+{
+    "approved": true
+}

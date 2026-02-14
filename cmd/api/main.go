@@ -12,6 +12,10 @@ type CaseResponse struct {
 	Case
 }
 
+type UpdateRequest struct {
+	Approved bool `json:"approved"`
+}
+
 type CaseRepository interface {
 	Save(Case) (string, error)
 	Get(string) (Case, error)
@@ -29,7 +33,7 @@ func main() {
 		if err := c.Bind(&req); err != nil {
 			return c.JSON(http.StatusBadRequest, err)
 		}
-		// add the case to dbStruct
+		// add the case to the database
 		id, err := repo.Save(req)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, err)
@@ -42,6 +46,24 @@ func main() {
 		dbr, err := repo.Get(id)
 		if err != nil {
 			return c.JSON(http.StatusNotFound, "not found")
+		}
+		return c.JSON(http.StatusOK, dbr)
+	})
+	e.PUT("/case/:id", func(c *echo.Context) error {
+		id := c.Param("id")
+		dbr, err := repo.Get(id)
+		if err != nil {
+			return c.JSON(http.StatusNotFound, "not found")
+		}
+
+		var req UpdateRequest
+		if err = c.Bind(&req); err != nil {
+			return c.JSON(http.StatusBadRequest, err)
+		}
+		dbr.Approved = req.Approved
+
+		if _, err = repo.Save(dbr); err != nil {
+			return c.JSON(http.StatusInternalServerError, err)
 		}
 		return c.JSON(http.StatusOK, dbr)
 	})
