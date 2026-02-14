@@ -19,13 +19,20 @@ type UpdateRequest struct {
 type CaseRepository interface {
 	Save(Case) (string, error)
 	Get(string) (Case, error)
+	Close() error
 }
 
 func main() {
 	e := echo.New()
 
 	var repo CaseRepository
-	repo = NewInMemoryDB()
+	var err error
+	repo, err = NewJSONFileDB("cases.json")
+	if err != nil {
+		slog.Error("failed to initialize database", "error", err)
+		return
+	}
+	defer repo.Close()
 
 	e.POST("/case", func(c *echo.Context) error {
 		// read the request body into the new Case
