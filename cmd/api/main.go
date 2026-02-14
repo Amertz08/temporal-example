@@ -33,7 +33,6 @@ func main() {
 			return c.JSON(500, err)
 		}
 		// return case object
-
 		return c.JSON(200, CaseResponse{Id: id, Case: req})
 	})
 	e.GET("/case/:id", func(c *echo.Context) error {
