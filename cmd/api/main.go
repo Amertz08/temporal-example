@@ -24,6 +24,7 @@ type dbStruct map[string]Case
 func main() {
 	e := echo.New()
 
+	// TODO: make persistent with JSON file
 	db := dbStruct{}
 
 	e.POST("/case", func(c *echo.Context) error {
