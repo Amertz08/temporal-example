@@ -22,7 +22,7 @@ func main() {
 	repo := NewInMemoryDB()
 
 	e.POST("/case", func(c *echo.Context) error {
-		// read the request body into new Case
+		// read the request body into the new Case
 		var req Case
 		if err := c.Bind(&req); err != nil {
 			return c.JSON(400, err)
