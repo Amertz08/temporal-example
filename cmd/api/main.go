@@ -3,7 +3,6 @@ package main
 import (
 	"log/slog"
 
-	"github.com/google/uuid"
 	"github.com/labstack/echo/v5"
 )
 
@@ -34,11 +33,19 @@ func main() {
 			return c.JSON(400, err)
 		}
 		// add the case to dbStruct
-		id := uuid.New().String()
+		id := "abc-def"
 		db[id] = req
 		// return case object
 
 		return c.JSON(200, CaseResponse{Id: id, Case: req})
+	})
+	e.GET("/case/:id", func(c *echo.Context) error {
+		id := c.Param("id")
+		dbr, ok := db[id]
+		if !ok {
+			return c.JSON(404, "not found")
+		}
+		return c.JSON(200, dbr)
 	})
 
 	if err := e.Start(":8080"); err != nil {
