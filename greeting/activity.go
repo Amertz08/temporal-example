@@ -1,4 +1,4 @@
-package temporal_example
+package greeting
 
 import "context"
 
