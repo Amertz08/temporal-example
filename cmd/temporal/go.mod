@@ -1,4 +1,4 @@
-module github.com/Amertz08/temporal-example
+module github.com/Amertz08/temporal-example/cmd/temporal
 
 go 1.24.11
 
