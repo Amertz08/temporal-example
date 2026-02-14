@@ -2,6 +2,7 @@ package main
 
 import (
 	"log/slog"
+	"net/http"
 
 	"github.com/labstack/echo/v5"
 )
@@ -26,23 +27,23 @@ func main() {
 		// read the request body into the new Case
 		var req Case
 		if err := c.Bind(&req); err != nil {
-			return c.JSON(400, err)
+			return c.JSON(http.StatusBadRequest, err)
 		}
 		// add the case to dbStruct
 		id, err := repo.Save(req)
 		if err != nil {
-			return c.JSON(500, err)
+			return c.JSON(http.StatusInternalServerError, err)
 		}
 		// return case object
-		return c.JSON(200, CaseResponse{Id: id, Case: req})
+		return c.JSON(http.StatusOK, CaseResponse{Id: id, Case: req})
 	})
 	e.GET("/case/:id", func(c *echo.Context) error {
 		id := c.Param("id")
 		dbr, err := repo.Get(id)
 		if err != nil {
-			return c.JSON(404, "not found")
+			return c.JSON(http.StatusNotFound, "not found")
 		}
-		return c.JSON(200, dbr)
+		return c.JSON(http.StatusOK, dbr)
 	})
 
 	if err := e.Start(":8080"); err != nil {
