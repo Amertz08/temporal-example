@@ -1,1 +1,9 @@
 POST localhost:8080/case
+Content-Type: application/json
+
+{
+    "name": "adam",
+    "address": "1600 Pennselvania Ave.",
+    "email": "hello@example.com",
+    "vin_number": "abcdef"
+}
