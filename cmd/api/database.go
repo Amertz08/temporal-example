@@ -9,6 +9,8 @@ type Case struct {
 	VinNumber string `json:"vin_number"`
 }
 
+// TODO: JSON file implementation for persistent storage
+
 type dbStruct map[string]Case
 
 type inMemoryDB struct {
