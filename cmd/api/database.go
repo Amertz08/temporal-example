@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"sync"
+
+	"github.com/google/uuid"
 )
 
 type Case struct {
@@ -56,7 +58,7 @@ func (db *jsonFileDB) Save(c Case) (string, error) {
 	db.mu.Lock()
 	defer db.mu.Unlock()
 
-	id := "abc-def"
+	id := uuid.NewString()
 	db.db[id] = c
 
 	if err := db.writeToFile(); err != nil {
