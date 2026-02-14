@@ -2,19 +2,7 @@ package main
 
 import (
 	"log/slog"
-	"net/http"
-
-	"github.com/labstack/echo/v5"
 )
-
-type CaseResponse struct {
-	Id string `json:"id"`
-	Case
-}
-
-type UpdateRequest struct {
-	Approved bool `json:"approved"`
-}
 
 type CaseRepository interface {
 	Save(Case) (string, error)
@@ -23,8 +11,6 @@ type CaseRepository interface {
 }
 
 func main() {
-	e := echo.New()
-
 	var repo CaseRepository
 	var err error
 	repo, err = NewJSONFileDB("cases.json")
@@ -34,46 +20,7 @@ func main() {
 	}
 	defer repo.Close()
 
-	e.POST("/case", func(c *echo.Context) error {
-		// read the request body into the new Case
-		var req Case
-		if err := c.Bind(&req); err != nil {
-			return c.JSON(http.StatusBadRequest, err)
-		}
-		// add the case to the database
-		id, err := repo.Save(req)
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, err)
-		}
-		// return case object
-		return c.JSON(http.StatusOK, CaseResponse{Id: id, Case: req})
-	})
-	e.GET("/case/:id", func(c *echo.Context) error {
-		id := c.Param("id")
-		dbr, err := repo.Get(id)
-		if err != nil {
-			return c.JSON(http.StatusNotFound, "not found")
-		}
-		return c.JSON(http.StatusOK, dbr)
-	})
-	e.PUT("/case/:id", func(c *echo.Context) error {
-		id := c.Param("id")
-		dbr, err := repo.Get(id)
-		if err != nil {
-			return c.JSON(http.StatusNotFound, "not found")
-		}
-
-		var req UpdateRequest
-		if err = c.Bind(&req); err != nil {
-			return c.JSON(http.StatusBadRequest, err)
-		}
-		dbr.Approved = req.Approved
-
-		if _, err = repo.Save(dbr); err != nil {
-			return c.JSON(http.StatusInternalServerError, err)
-		}
-		return c.JSON(http.StatusOK, dbr)
-	})
+	e := NewServer(repo)
 
 	if err := e.Start(":8080"); err != nil {
 		slog.Error("failed to start server", "error", err)
