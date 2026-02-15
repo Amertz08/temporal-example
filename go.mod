@@ -1,4 +1,4 @@
-module github.com/Amertz08/temporal-example/cmd/api
+module github.com/Amertz08/temporal-example
 
 go 1.25.0
 

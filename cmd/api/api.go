@@ -3,12 +3,14 @@ package main
 import (
 	"net/http"
 
+	"github.com/Amertz08/temporal-example/internal/database"
+
 	"github.com/labstack/echo/v5"
 )
 
 type CaseResponse struct {
 	Id string `json:"id"`
-	Case
+	database.Case
 }
 
 type PatchRequest struct {
@@ -25,7 +27,7 @@ func NewServer(repo CaseRepository) *echo.Echo {
 
 	e.POST("/case", func(c *echo.Context) error {
 		// read the request body into the new Case
-		var req Case
+		var req database.Case
 		if err := c.Bind(&req); err != nil {
 			return c.JSON(http.StatusBadRequest, err)
 		}

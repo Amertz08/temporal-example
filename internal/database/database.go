@@ -1,4 +1,4 @@
-package main
+package database
 
 import (
 	"encoding/json"
@@ -18,15 +18,15 @@ type Case struct {
 	Manufactured bool   `json:"manufactured"`
 }
 
-type jsonFileDB struct {
+type JSONFileDB struct {
 	file     *os.File
 	filePath string
 	db       dbStruct
 	mu       sync.RWMutex
 }
 
-func NewJSONFileDB(filePath string) (*jsonFileDB, error) {
-	db := &jsonFileDB{
+func NewJSONFileDB(filePath string) (*JSONFileDB, error) {
+	db := &JSONFileDB{
 		filePath: filePath,
 		db:       make(dbStruct),
 	}
@@ -55,7 +55,7 @@ func NewJSONFileDB(filePath string) (*jsonFileDB, error) {
 	return db, nil
 }
 
-func (db *jsonFileDB) Save(c Case) (string, error) {
+func (db *JSONFileDB) Save(c Case) (string, error) {
 	db.mu.Lock()
 	defer db.mu.Unlock()
 
@@ -69,7 +69,7 @@ func (db *jsonFileDB) Save(c Case) (string, error) {
 	return id, nil
 }
 
-func (db *jsonFileDB) Get(id string) (Case, error) {
+func (db *JSONFileDB) Get(id string) (Case, error) {
 	db.mu.RLock()
 	defer db.mu.RUnlock()
 
@@ -80,7 +80,7 @@ func (db *jsonFileDB) Get(id string) (Case, error) {
 	return c, nil
 }
 
-func (db *jsonFileDB) Close() error {
+func (db *JSONFileDB) Close() error {
 	db.mu.Lock()
 	defer db.mu.Unlock()
 
@@ -90,7 +90,7 @@ func (db *jsonFileDB) Close() error {
 	return nil
 }
 
-func (db *jsonFileDB) writeToFile() error {
+func (db *JSONFileDB) writeToFile() error {
 	// Truncate and seek to beginning
 	if err := db.file.Truncate(0); err != nil {
 		return fmt.Errorf("failed to truncate file: %w", err)
@@ -111,23 +111,23 @@ func (db *jsonFileDB) writeToFile() error {
 
 type dbStruct map[string]Case
 
-type inMemoryDB struct {
+type InMemoryDB struct {
 	db dbStruct
 }
 
-func NewInMemoryDB() *inMemoryDB {
-	return &inMemoryDB{
+func NewInMemoryDB() *InMemoryDB {
+	return &InMemoryDB{
 		db: make(dbStruct),
 	}
 }
 
-func (db *inMemoryDB) Save(c Case) (string, error) {
+func (db *InMemoryDB) Save(c Case) (string, error) {
 	id := "abc-def"
 	db.db[id] = c
 	return id, nil
 }
 
-func (db *inMemoryDB) Get(id string) (Case, error) {
+func (db *InMemoryDB) Get(id string) (Case, error) {
 	c, ok := db.db[id]
 	if !ok {
 		return Case{}, fmt.Errorf("not found")
@@ -135,6 +135,6 @@ func (db *inMemoryDB) Get(id string) (Case, error) {
 	return c, nil
 }
 
-func (db *inMemoryDB) Close() error {
+func (db *InMemoryDB) Close() error {
 	return nil
 }

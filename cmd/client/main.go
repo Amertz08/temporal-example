@@ -7,13 +7,20 @@ import (
 	"io"
 	"log"
 	"net/http"
+
+	"github.com/Amertz08/temporal-example/internal/database"
 )
+
+type CaseResponse struct {
+	Id string `json:"id"`
+	database.Case
+}
 
 func main() {
 	baseURL := "http://localhost:8080"
 
 	// POST /case
-	newCase := Case{
+	newCase := database.Case{
 		Name:      "adam",
 		Address:   "1600 Pennselvania Ave.",
 		Email:     "hello@example.com",
