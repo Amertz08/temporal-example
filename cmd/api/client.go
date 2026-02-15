@@ -44,22 +44,42 @@ func main() {
 	body, _ = io.ReadAll(resp.Body)
 	fmt.Printf("GET /case/%s response (%d):\n%s\n\n", caseID, resp.StatusCode, string(body))
 
-	// PUT /case/:id
-	updateReq := UpdateRequest{
-		Approved: true,
+	// PATCH /case/:id - update approved field
+	approved := true
+	patchReq1 := map[string]interface{}{
+		"approved": approved,
 	}
 
-	putBody, _ := json.Marshal(updateReq)
-	req, _ := http.NewRequest(http.MethodPut, baseURL+"/case/"+caseID, bytes.NewBuffer(putBody))
+	patchBody1, _ := json.Marshal(patchReq1)
+	req, _ := http.NewRequest(http.MethodPatch, baseURL+"/case/"+caseID, bytes.NewBuffer(patchBody1))
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}
 	resp, err = client.Do(req)
 	if err != nil {
-		log.Fatalf("PUT request failed: %v", err)
+		log.Fatalf("PATCH request failed: %v", err)
 	}
 	defer resp.Body.Close()
 
 	body, _ = io.ReadAll(resp.Body)
-	fmt.Printf("PUT /case/%s response (%d):\n%s\n", caseID, resp.StatusCode, string(body))
+	fmt.Printf("PATCH /case/%s (approved) response (%d):\n%s\n\n", caseID, resp.StatusCode, string(body))
+
+	// PATCH /case/:id - update manufactured field
+	manufactured := true
+	patchReq2 := map[string]interface{}{
+		"manufactured": manufactured,
+	}
+
+	patchBody2, _ := json.Marshal(patchReq2)
+	req, _ = http.NewRequest(http.MethodPatch, baseURL+"/case/"+caseID, bytes.NewBuffer(patchBody2))
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err = client.Do(req)
+	if err != nil {
+		log.Fatalf("PATCH request failed: %v", err)
+	}
+	defer resp.Body.Close()
+
+	body, _ = io.ReadAll(resp.Body)
+	fmt.Printf("PATCH /case/%s (manufactured) response (%d):\n%s\n", caseID, resp.StatusCode, string(body))
 }
