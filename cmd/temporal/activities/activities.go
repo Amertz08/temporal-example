@@ -17,6 +17,10 @@ func SendEmail(ctx context.Context, to, subject, body string) error {
 	return nil
 }
 
+func GetVinDetails(ctx context.Context, vin string) (*models.VinDetails, error) {
+	return nil, nil
+}
+
 func GetCaseById(ctx context.Context, caseId string) (*models.Case, error) {
 	repo, err := database.NewJSONFileDB("../api/cases.json")
 	if err != nil {

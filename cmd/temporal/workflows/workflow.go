@@ -1,6 +1,7 @@
 package workflows
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/Amertz08/temporal-example/cmd/temporal/activities"
@@ -20,6 +21,18 @@ func RegisterLicensePlateWorkflow(ctx workflow.Context, caseId string) error {
 		log.Println("Failed to get case from database", err)
 		return err
 	}
+
+	var vinDetails *models.VinDetails
+	err = workflow.ExecuteActivity(
+		ctx,
+		activities.GetVinDetails,
+		caseRecord.VinNumber,
+	).Get(ctx, &vinDetails)
+	if err != nil {
+		fmt.Println("error getting vin details")
+		return err
+	}
+
 	err = workflow.ExecuteActivity(
 		ctx,
 		activities.SendEmail,

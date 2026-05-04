@@ -8,3 +8,12 @@ type Case struct {
 	Approved     bool   `json:"approved"`
 	Manufactured bool   `json:"manufactured"`
 }
+
+type VinDetails struct {
+	Manufacturer string
+	ModelYear    string
+	Make         string
+	Model        string
+	VehicleType  string
+	BodyClass    string
+}
