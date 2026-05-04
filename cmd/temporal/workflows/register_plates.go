@@ -1,6 +1,7 @@
 package workflows
 
 import (
+	"context"
 	"fmt"
 	"log"
 
@@ -26,10 +27,8 @@ func RegisterLicensePlateWorkflow(ctx workflow.Context, caseId string) error {
 
 	err = workflow.ExecuteActivity(
 		ctx,
-		activities.SendEmail,
+		SendInitialEmail,
 		caseRecord.Email,
-		"Your case has been submitted",
-		"We have received your information and will be validating the information and will get back to you with further steps.",
 	).Get(ctx, nil)
 	if err != nil {
 		fmt.Println("errored on sending initial email")
@@ -56,10 +55,8 @@ func RegisterLicensePlateWorkflow(ctx workflow.Context, caseId string) error {
 	// Send email appointment confirmation
 	err = workflow.ExecuteActivity(
 		ctx,
-		activities.SendEmail,
+		SendAppointmentConfirmationEmail,
 		caseRecord.Email,
-		"License Plate Registered",
-		"Your appointment is set for 2025-01-01 at 9:00 AM CST",
 	).Get(ctx, nil)
 	if err != nil {
 		log.Println("Failed to send email", err)
@@ -78,4 +75,22 @@ func RegisterLicensePlateWorkflow(ctx workflow.Context, caseId string) error {
 
 	// TODO: wait for approval
 	return nil
+}
+
+func SendInitialEmail(ctx context.Context, toEmail string) error {
+	return activities.SendEmail(
+		ctx,
+		toEmail,
+		"Your case has been submitted",
+		"We have received your information and will be validating the information and will get back to you with further steps.",
+	)
+}
+
+func SendAppointmentConfirmationEmail(ctx context.Context, toEmail string) error {
+	return activities.SendEmail(
+		ctx,
+		toEmail,
+		"License Plate Registered",
+		"Your appointment is set for 2025-01-01 at 9:00 AM CST",
+	)
 }
