@@ -21,7 +21,13 @@ func RegisterLicensePlateWorkflow(ctx workflow.Context, caseId string) error {
 		log.Println("Failed to get case from database", err)
 		return err
 	}
-	err = workflow.ExecuteActivity(ctx, activities.SendEmail, caseRecord.Email, "License Plate Registered", "Your appointment is set for 2025-01-01 at 9:00 AM CST").Get(ctx, nil)
+	err = workflow.ExecuteActivity(
+		ctx,
+		activities.SendEmail,
+		caseRecord.Email,
+		"License Plate Registered",
+		"Your appointment is set for 2025-01-01 at 9:00 AM CST",
+	).Get(ctx, nil)
 	if err != nil {
 		log.Println("Failed to send email", err)
 		return err
