@@ -9,14 +9,13 @@ import (
 )
 
 func RegisterLicensePlateWorkflow(ctx workflow.Context, caseId string) error {
-	repo, err := database.NewJSONFileDB("../api/cases.json")
-	if err != nil {
-		log.Println("Failed to initialize database", err)
-		return err
-	}
-	defer repo.Close()
-	// TODO: I don't think you're supposed to query the DB in the workflow but instead do it as an activity.
-	caseRecord, err := repo.Get(caseId)
+	var caseRecord database.Case
+	err := workflow.ExecuteActivity(
+		ctx,
+		activities.GetCaseById,
+		caseId,
+	).Get(ctx, &caseRecord)
+
 	if err != nil {
 		log.Println("Failed to get case from database", err)
 		return err
