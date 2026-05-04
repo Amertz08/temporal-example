@@ -54,6 +54,14 @@ func RegisterLicensePlateWorkflow(ctx workflow.Context, caseId string) error {
 	workflow.GetSignalChannel(ctx, ApprovedSignal).Receive(ctx, nil)
 	// If not fine do remediation workflow
 
+	// Calculate fee amount
+	var feeAmount int64
+	workflow.ExecuteActivity(
+		ctx,
+		activities.CalculateFeeAmount,
+		&vinDetails,
+	).Get(ctx, &feeAmount)
+
 	// Send email notifying user to schedule an appointment
 
 	// Block until appointment is schedule

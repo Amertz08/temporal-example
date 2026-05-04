@@ -39,3 +39,7 @@ func GetCaseById(ctx context.Context, caseId string) (*models.Case, error) {
 
 	return &caseRecord, nil
 }
+
+func CalculateFeeAmount(ctx context.Context, vinDetails *models.VinDetails) (int64, error) {
+	return 10000, nil
+}
