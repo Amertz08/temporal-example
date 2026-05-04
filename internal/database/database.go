@@ -6,17 +6,9 @@ import (
 	"os"
 	"sync"
 
+	"github.com/Amertz08/temporal-example/internal/models"
 	"github.com/google/uuid"
 )
-
-type Case struct {
-	Name         string `json:"name"`
-	Address      string `json:"address"`
-	Email        string `json:"email"`
-	VinNumber    string `json:"vin_number"`
-	Approved     bool   `json:"approved"`
-	Manufactured bool   `json:"manufactured"`
-}
 
 type JSONFileDB struct {
 	file     *os.File
@@ -55,7 +47,7 @@ func NewJSONFileDB(filePath string) (*JSONFileDB, error) {
 	return db, nil
 }
 
-func (db *JSONFileDB) Save(c Case) (string, error) {
+func (db *JSONFileDB) Save(c models_go.Case) (string, error) {
 	db.mu.Lock()
 	defer db.mu.Unlock()
 
@@ -69,13 +61,13 @@ func (db *JSONFileDB) Save(c Case) (string, error) {
 	return id, nil
 }
 
-func (db *JSONFileDB) Get(id string) (Case, error) {
+func (db *JSONFileDB) Get(id string) (models_go.Case, error) {
 	db.mu.RLock()
 	defer db.mu.RUnlock()
 
 	c, ok := db.db[id]
 	if !ok {
-		return Case{}, fmt.Errorf("not found")
+		return models_go.Case{}, fmt.Errorf("not found")
 	}
 	return c, nil
 }
@@ -109,7 +101,7 @@ func (db *JSONFileDB) writeToFile() error {
 	return db.file.Sync()
 }
 
-type dbStruct map[string]Case
+type dbStruct map[string]models_go.Case
 
 type InMemoryDB struct {
 	db dbStruct
@@ -121,16 +113,16 @@ func NewInMemoryDB() *InMemoryDB {
 	}
 }
 
-func (db *InMemoryDB) Save(c Case) (string, error) {
+func (db *InMemoryDB) Save(c models_go.Case) (string, error) {
 	id := "abc-def"
 	db.db[id] = c
 	return id, nil
 }
 
-func (db *InMemoryDB) Get(id string) (Case, error) {
+func (db *InMemoryDB) Get(id string) (models_go.Case, error) {
 	c, ok := db.db[id]
 	if !ok {
-		return Case{}, fmt.Errorf("not found")
+		return models_go.Case{}, fmt.Errorf("not found")
 	}
 	return c, nil
 }

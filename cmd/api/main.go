@@ -4,11 +4,12 @@ import (
 	"log/slog"
 
 	"github.com/Amertz08/temporal-example/internal/database"
+	"github.com/Amertz08/temporal-example/internal/models"
 )
 
 type CaseRepository interface {
-	Save(database.Case) (string, error)
-	Get(string) (database.Case, error)
+	Save(models_go.Case) (string, error)
+	Get(string) (models_go.Case, error)
 	Close() error
 }
 

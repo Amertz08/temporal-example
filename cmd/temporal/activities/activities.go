@@ -7,6 +7,7 @@ import (
 	"log"
 
 	"github.com/Amertz08/temporal-example/internal/database"
+	"github.com/Amertz08/temporal-example/internal/models"
 )
 
 func SendEmail(ctx context.Context, to, subject, body string) error {
@@ -14,7 +15,7 @@ func SendEmail(ctx context.Context, to, subject, body string) error {
 	return nil
 }
 
-func GetCaseById(ctx context.Context, caseId string) (*database.Case, error) {
+func GetCaseById(ctx context.Context, caseId string) (*models.Case, error) {
 	repo, err := database.NewJSONFileDB("../api/cases.json")
 	if err != nil {
 		log.Println("Failed to initialize database", err)

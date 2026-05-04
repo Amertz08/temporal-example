@@ -4,12 +4,12 @@ import (
 	"log"
 
 	"github.com/Amertz08/temporal-example/cmd/temporal/activities"
-	"github.com/Amertz08/temporal-example/internal/database"
+	"github.com/Amertz08/temporal-example/internal/models"
 	"go.temporal.io/sdk/workflow"
 )
 
 func RegisterLicensePlateWorkflow(ctx workflow.Context, caseId string) error {
-	var caseRecord database.Case
+	var caseRecord *models.Case
 	err := workflow.ExecuteActivity(
 		ctx,
 		activities.GetCaseById,

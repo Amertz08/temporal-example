@@ -4,14 +4,14 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Amertz08/temporal-example/internal/database"
+	"github.com/Amertz08/temporal-example/internal/models"
 	"github.com/labstack/echo/v5"
 	"go.temporal.io/sdk/client"
 )
 
 type CaseResponse struct {
 	Id string `json:"id"`
-	database.Case
+	models_go.Case
 }
 
 type PatchRequest struct {
@@ -28,7 +28,7 @@ func NewServer(repo CaseRepository) *echo.Echo {
 
 	e.POST("/case", func(c *echo.Context) error {
 		// read the request body into the new Case
-		var req database.Case
+		var req models_go.Case
 		if err := c.Bind(&req); err != nil {
 			return c.JSON(http.StatusBadRequest, err)
 		}

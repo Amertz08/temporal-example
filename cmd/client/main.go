@@ -8,19 +8,19 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Amertz08/temporal-example/internal/database"
+	"github.com/Amertz08/temporal-example/internal/models"
 )
 
 type CaseResponse struct {
 	Id string `json:"id"`
-	database.Case
+	models_go.Case
 }
 
 func main() {
 	baseURL := "http://localhost:8080"
 
 	// POST /case
-	newCase := database.Case{
+	newCase := models_go.Case{
 		Name:      "adam",
 		Address:   "1600 Pennselvania Ave.",
 		Email:     "hello@example.com",
