@@ -10,9 +10,11 @@ import (
 	"go.temporal.io/sdk/workflow"
 )
 
-const ApprovedSignal = "approved"
-const AppointmentScheduledSignal = "appointment_scheduled"
-const ValidatedIdSignal = "id_validated"
+const (
+	ApprovedSignal             = "approved"
+	AppointmentScheduledSignal = "appointment_scheduled"
+	ValidatedIdSignal          = "id_validated"
+)
 
 func RegisterLicensePlateWorkflow(ctx workflow.Context, caseId string) error {
 	var caseRecord *models.Case
