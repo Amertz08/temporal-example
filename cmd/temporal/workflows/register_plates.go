@@ -11,6 +11,8 @@ import (
 )
 
 const ApprovedSignal = "approved"
+const AppointmentScheduledSignal = "appointment_scheduled"
+const ValidatedIdSignal = "id_validated"
 
 func RegisterLicensePlateWorkflow(ctx workflow.Context, caseId string) error {
 	var caseRecord *models.Case
@@ -52,6 +54,9 @@ func RegisterLicensePlateWorkflow(ctx workflow.Context, caseId string) error {
 
 	// Send email notifying user to schedule an appointment
 
+	// Block until appointment is schedule
+	workflow.GetSignalChannel(ctx, AppointmentScheduledSignal).Receive(ctx, nil)
+
 	// Send email appointment confirmation
 	err = workflow.ExecuteActivity(
 		ctx,
@@ -63,7 +68,8 @@ func RegisterLicensePlateWorkflow(ctx workflow.Context, caseId string) error {
 		return err
 	}
 
-	// employee validates gov issued ID and registration
+	// Block until employee validates gov issued ID and registration
+	workflow.GetSignalChannel(ctx, ValidatedIdSignal).Receive(ctx, nil)
 	// ID & registration uploaded
 	// employee accepts payment
 	// mfg order created
