@@ -8,8 +8,8 @@ import (
 )
 
 type CaseRepository interface {
-	Save(models_go.Case) (string, error)
-	Get(string) (models_go.Case, error)
+	Save(models.Case) (string, error)
+	Get(string) (models.Case, error)
 	Close() error
 }
 

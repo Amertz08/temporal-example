@@ -13,14 +13,14 @@ import (
 
 type CaseResponse struct {
 	Id string `json:"id"`
-	models_go.Case
+	models.Case
 }
 
 func main() {
 	baseURL := "http://localhost:8080"
 
 	// POST /case
-	newCase := models_go.Case{
+	newCase := models.Case{
 		Name:      "adam",
 		Address:   "1600 Pennselvania Ave.",
 		Email:     "hello@example.com",

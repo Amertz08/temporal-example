@@ -11,7 +11,7 @@ import (
 
 type CaseResponse struct {
 	Id string `json:"id"`
-	models_go.Case
+	models.Case
 }
 
 type PatchRequest struct {
@@ -28,7 +28,7 @@ func NewServer(repo CaseRepository) *echo.Echo {
 
 	e.POST("/case", func(c *echo.Context) error {
 		// read the request body into the new Case
-		var req models_go.Case
+		var req models.Case
 		if err := c.Bind(&req); err != nil {
 			return c.JSON(http.StatusBadRequest, err)
 		}
