@@ -18,6 +18,7 @@ func SendEmail(ctx context.Context, to, subject, body string) error {
 }
 
 func GetVinDetails(ctx context.Context, vin string) (*models.VinDetails, error) {
+	// https://vpic.nhtsa.dot.gov/api/
 	return nil, nil
 }
 
