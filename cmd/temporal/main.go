@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 
+	"github.com/Amertz08/temporal-example/cmd/temporal/activities"
+	"github.com/Amertz08/temporal-example/cmd/temporal/workflows"
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/worker"
 )
@@ -16,8 +18,8 @@ func main() {
 
 	w := worker.New(c, "test-workflow", worker.Options{})
 
-	w.RegisterWorkflow(RegisterLicensePlateWorkflow)
-	w.RegisterActivity(SendEmail)
+	w.RegisterWorkflow(workflows.RegisterLicensePlateWorkflow)
+	w.RegisterActivity(activities.SendEmail)
 
 	err = w.Run(worker.InterruptCh())
 	if err != nil {
