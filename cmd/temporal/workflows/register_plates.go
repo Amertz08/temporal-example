@@ -4,9 +4,11 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/Amertz08/temporal-example/cmd/temporal/activities"
 	"github.com/Amertz08/temporal-example/internal/models"
+	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 )
 
@@ -17,6 +19,15 @@ const (
 )
 
 func RegisterLicensePlateWorkflow(ctx workflow.Context, caseId string) error {
+	sendEmailRetryPolicy := &temporal.RetryPolicy{
+		InitialInterval:    time.Second,
+		BackoffCoefficient: 2.0,
+		MaximumAttempts:    3,
+	}
+	sendEmailActivityOptions := workflow.ActivityOptions{
+		RetryPolicy: sendEmailRetryPolicy,
+	}
+
 	var caseRecord *models.Case
 	err := workflow.ExecuteActivity(
 		ctx,
@@ -29,6 +40,7 @@ func RegisterLicensePlateWorkflow(ctx workflow.Context, caseId string) error {
 		return err
 	}
 
+	ctx = workflow.WithActivityOptions(ctx, sendEmailActivityOptions)
 	err = workflow.ExecuteActivity(
 		ctx,
 		SendInitialEmail,
@@ -68,6 +80,7 @@ func RegisterLicensePlateWorkflow(ctx workflow.Context, caseId string) error {
 	workflow.GetSignalChannel(ctx, AppointmentScheduledSignal).Receive(ctx, nil)
 
 	// Send email appointment confirmation
+	ctx = workflow.WithActivityOptions(ctx, sendEmailActivityOptions)
 	err = workflow.ExecuteActivity(
 		ctx,
 		SendAppointmentConfirmationEmail,
