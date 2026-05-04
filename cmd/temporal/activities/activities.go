@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/Amertz08/temporal-example/internal/database"
 	"github.com/Amertz08/temporal-example/internal/models"
@@ -12,6 +13,7 @@ import (
 
 func SendEmail(ctx context.Context, to, subject, body string) error {
 	log.Printf("sending email to %s subject %s", to, subject)
+	time.Sleep(2 * time.Second)
 	return nil
 }
 
@@ -28,6 +30,7 @@ func GetCaseById(ctx context.Context, caseId string) (*models.Case, error) {
 		log.Println("Failed to get case record", err)
 		return nil, errors.New(fmt.Sprintf("no case for id: %s", caseRecord))
 	}
+	time.Sleep(100 * time.Millisecond)
 
 	return &caseRecord, nil
 }
