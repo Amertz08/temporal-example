@@ -41,6 +41,7 @@ func NewServer(repo CaseRepository) *echo.Echo {
 		tClient, _ := client.Dial(client.Options{})
 		defer tClient.Close()
 
+		// TODO: have a unique ID here which is probably the case ID
 		opts := client.StartWorkflowOptions{
 			ID:        "case-workflow",
 			TaskQueue: "test-workflow",
