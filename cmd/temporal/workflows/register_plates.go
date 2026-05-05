@@ -18,7 +18,11 @@ const (
 	ValidatedIdSignal          = "id_validated"
 )
 
-func RegisterLicensePlateWorkflow(ctx workflow.Context, caseId string) error {
+type RegisterLicensePlateInput struct {
+	caseId string
+}
+
+func RegisterLicensePlateWorkflow(ctx workflow.Context, input RegisterLicensePlateInput) error {
 	sendEmailRetryPolicy := &temporal.RetryPolicy{
 		InitialInterval:    time.Second,
 		BackoffCoefficient: 2.0,
@@ -32,7 +36,7 @@ func RegisterLicensePlateWorkflow(ctx workflow.Context, caseId string) error {
 	err := workflow.ExecuteActivity(
 		ctx,
 		activities.GetCaseById,
-		caseId,
+		input.caseId,
 	).Get(ctx, &caseRecord)
 
 	if err != nil {
