@@ -3,18 +3,12 @@ package main
 import (
 	"log/slog"
 
+	"github.com/Amertz08/temporal-example/internal/api/handlers"
 	"github.com/Amertz08/temporal-example/internal/database"
-	"github.com/Amertz08/temporal-example/internal/models"
 )
 
-type CaseRepository interface {
-	Save(models.Case) (string, error)
-	Get(string) (models.Case, error)
-	Close() error
-}
-
 func main() {
-	var repo CaseRepository
+	var repo handlers.CaseRepository
 	var err error
 	repo, err = database.NewJSONFileDB("cases.json")
 	if err != nil {

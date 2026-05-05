@@ -5,7 +5,7 @@ import (
 	"github.com/labstack/echo/v5"
 )
 
-func NewServer(repo CaseRepository) *echo.Echo {
+func NewServer(repo handlers.CaseRepository) *echo.Echo {
 	e := echo.New()
 
 	e.POST("/case", handlers.CreateCase(repo))
