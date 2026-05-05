@@ -20,15 +20,7 @@ func NewServer(repo CaseRepository) *echo.Echo {
 	e := echo.New()
 
 	e.POST("/case", handlers.CreateCase(repo))
-
-	e.GET("/case/:id", func(c *echo.Context) error {
-		id := c.Param("id")
-		dbr, err := repo.Get(id)
-		if err != nil {
-			return c.JSON(http.StatusNotFound, "not found")
-		}
-		return c.JSON(http.StatusOK, dbr)
-	})
+	e.GET("/case/:id", handlers.GetCaseById(repo))
 
 	e.PATCH("/case/:id", func(c *echo.Context) error {
 		id := c.Param("id")

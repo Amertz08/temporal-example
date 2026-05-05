@@ -53,3 +53,14 @@ func CreateCase(repo CaseRepository) echo.HandlerFunc {
 		return c.JSON(http.StatusOK, CaseResponse{Id: id, Case: req})
 	}
 }
+
+func GetCaseById(repo CaseRepository) echo.HandlerFunc {
+	return func(c *echo.Context) error {
+		id := c.Param("id")
+		dbr, err := repo.Get(id)
+		if err != nil {
+			return c.JSON(http.StatusNotFound, "not found")
+		}
+		return c.JSON(http.StatusOK, dbr)
+	}
+}
