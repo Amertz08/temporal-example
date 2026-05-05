@@ -45,9 +45,8 @@ func CreateCase(repo CaseRepository) echo.HandlerFunc {
 		tClient, _ := client.Dial(client.Options{})
 		defer tClient.Close()
 
-		// TODO: have a unique ID here which is probably the case ID
 		opts := client.StartWorkflowOptions{
-			ID:        "case-workflow",
+			ID:        "case-workflow-" + id,
 			TaskQueue: "test-workflow",
 		}
 
