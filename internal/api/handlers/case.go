@@ -14,6 +14,15 @@ type CaseResponse struct {
 	models.Case
 }
 
+type PatchRequest struct {
+	Name         *string `json:"name"`
+	Address      *string `json:"address"`
+	Email        *string `json:"email"`
+	VinNumber    *string `json:"vin_number"`
+	Approved     *bool   `json:"approved"`
+	Manufactured *bool   `json:"manufactured"`
+}
+
 type CaseRepository interface {
 	Save(models.Case) (string, error)
 	Get(string) (models.Case, error)
@@ -60,6 +69,46 @@ func GetCaseById(repo CaseRepository) echo.HandlerFunc {
 		dbr, err := repo.Get(id)
 		if err != nil {
 			return c.JSON(http.StatusNotFound, "not found")
+		}
+		return c.JSON(http.StatusOK, dbr)
+	}
+}
+
+func UpdateCase(repo CaseRepository) echo.HandlerFunc {
+	return func(c *echo.Context) error {
+		id := c.Param("id")
+		dbr, err := repo.Get(id)
+		if err != nil {
+			return c.JSON(http.StatusNotFound, "not found")
+		}
+
+		var req PatchRequest
+		if err = c.Bind(&req); err != nil {
+			return c.JSON(http.StatusBadRequest, err)
+		}
+
+		// Only update fields that were provided
+		if req.Name != nil {
+			dbr.Name = *req.Name
+		}
+		if req.Address != nil {
+			dbr.Address = *req.Address
+		}
+		if req.Email != nil {
+			dbr.Email = *req.Email
+		}
+		if req.VinNumber != nil {
+			dbr.VinNumber = *req.VinNumber
+		}
+		if req.Approved != nil {
+			dbr.Approved = *req.Approved
+		}
+		if req.Manufactured != nil {
+			dbr.Manufactured = *req.Manufactured
+		}
+
+		if _, err = repo.Save(dbr); err != nil {
+			return c.JSON(http.StatusInternalServerError, err)
 		}
 		return c.JSON(http.StatusOK, dbr)
 	}
